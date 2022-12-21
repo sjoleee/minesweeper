@@ -17,8 +17,8 @@ const mineSlice = createSlice({
   initialState,
   reducers: {
     start: (state, action) => {
-      const { row, col, mine } = action.payload;
-      const minePositionsArr = createMine({ row, col, mine });
+      const { row, col, mine, currentPosition } = action.payload;
+      const minePositionsArr = createMine({ row, col, mine, currentPosition });
       state.boardData = plantMine({
         col,
         minePositionsArr,

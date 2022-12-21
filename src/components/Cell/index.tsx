@@ -2,6 +2,8 @@ import React from "react";
 
 import * as S from "./styles";
 
-const Cell = ({ col }: { col: number }) => <S.Td>{col}</S.Td>;
+const Cell = ({ col, onLeftClick }: { col: number; onLeftClick: () => void }) => (
+  <S.Button onClick={onLeftClick}>{col}</S.Button>
+);
 
 export default Cell;

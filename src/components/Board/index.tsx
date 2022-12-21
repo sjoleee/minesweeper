@@ -9,22 +9,28 @@ const Board = () => {
   const { status } = useAppSelect((state) => state);
   const dispatch = useAppDispatch();
 
-  const onLeftClick = () => {
+  const onLeftClick = (currentPosition: number) => {
     if (status === GAME_STATUS.READY) {
-      dispatch(start({ row: ROW, col: COL, mine: MINE }));
+      dispatch(start({ row: ROW, col: COL, mine: MINE, currentPosition }));
     }
   };
 
   return (
-    <>
+    <div>
       {boardData.map((row, rowIndex) => (
-        <tr key={rowIndex}>
+        <div key={rowIndex}>
           {row.map((col, colIndex) => (
-            <Cell key={rowIndex * row.length + colIndex} col={col} onLeftClick={onLeftClick} />
+            <Cell
+              key={rowIndex * row.length + colIndex}
+              col={col}
+              onLeftClick={() => {
+                onLeftClick(rowIndex * row.length + colIndex);
+              }}
+            />
           ))}
-        </tr>
+        </div>
       ))}
-    </>
+    </div>
   );
 };
 export default Board;
