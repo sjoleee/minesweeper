@@ -1,33 +1,26 @@
 import React from "react";
 
-import createBoard from "../../utils/createBoard";
-import createMine from "../../utils/createMine";
+import { COL, GAME_STATUS, MINE, ROW } from "../../constants";
+import { start, useAppDispatch, useAppSelect } from "../../store";
 import Cell from "../Cell";
 
-export enum CELL_TYPE {
-  NORMAL = -1,
-  QUESTION = -2,
-  FLAG = -3,
-  QUESTION_MINE = -4,
-  FLAG_MINE = -5,
-  MINE = -6,
-  OPENED = 0,
-}
-
 const Board = () => {
-  const row = 10;
-  const col = 10;
-  const mine = 10;
+  const { boardData } = useAppSelect((state) => state);
+  const { status } = useAppSelect((state) => state);
+  const dispatch = useAppDispatch();
 
-  const minePositionsArr = createMine(row, col, mine);
-  const data = createBoard(row, col, minePositionsArr);
+  const onLeftClick = () => {
+    if (status === GAME_STATUS.READY) {
+      dispatch(start({ row: ROW, col: COL, mine: MINE }));
+    }
+  };
 
   return (
     <>
-      {data.map((row, index) => (
-        <tr key={index}>
-          {row.map((col, index) => (
-            <Cell key={index} col={col} />
+      {boardData.map((row, rowIndex) => (
+        <tr key={rowIndex}>
+          {row.map((col, colIndex) => (
+            <Cell key={rowIndex * row.length + colIndex} col={col} onLeftClick={onLeftClick} />
           ))}
         </tr>
       ))}
