@@ -1,7 +1,7 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
-import { COL, GAME_STATUS, ROW } from "./constants";
+import { CELL_TYPE, COL, GAME_STATUS, ROW } from "./constants";
 import createBoard from "./utils/createBoard";
 import createMine from "./utils/createMine";
 import plantMine from "./utils/plantMine";
@@ -17,21 +17,27 @@ const mineSlice = createSlice({
   initialState,
   reducers: {
     start: (state, action) => {
-      const { row, col, mine, currentPosition } = action.payload;
-      const minePositionsArr = createMine({ row, col, mine, currentPosition });
-      state.boardData = plantMine({
-        col,
-        minePositionsArr,
-        boardData: state.boardData,
-      });
+      state.boardData = action.payload.boardData;
       state.status = GAME_STATUS.PLAYING;
+    },
+
+    open: (state, action) => {
+      const { row, col } = action.payload;
+      const targetCell = state.boardData[row][col];
+
+      if (targetCell === CELL_TYPE.NORMAL || targetCell === CELL_TYPE.QUESTION) {
+        state.boardData[row][col] = CELL_TYPE.OPENED;
+      }
+      if (targetCell === CELL_TYPE.MINE || targetCell === CELL_TYPE.QUESTION_MINE) {
+        state.boardData[row][col] = CELL_TYPE.CLICKED_MINE;
+        state.status = GAME_STATUS.LOSE;
+      }
     },
   },
 });
 
 const mineStore = configureStore({ reducer: mineSlice.reducer });
-// eslint-disable-next-line no-empty-pattern
-export const { start } = mineSlice.actions;
+export const { start, open } = mineSlice.actions;
 
 type RootState = ReturnType<typeof mineStore.getState>;
 type AppDispatch = typeof mineStore.dispatch;
