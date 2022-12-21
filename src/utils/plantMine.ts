@@ -10,13 +10,15 @@ const plantMine = ({
   minePositionsArr: number[];
   boardData: number[][];
 }): number[][] => {
+  const newBoard = boardData.map((row) => [...row]);
   minePositionsArr.forEach((position) => {
     const ver = Math.floor(position / col);
     const hor = position % col;
-    boardData[ver][hor] = CELL_TYPE.MINE;
+
+    newBoard[ver][hor] = CELL_TYPE.MINE;
   });
 
-  return boardData;
+  return newBoard;
 };
 
 export default plantMine;
