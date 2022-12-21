@@ -1,12 +1,7 @@
-import { CELL_TYPE } from "../components/Board";
+import { CELL_TYPE } from "../constants";
 
-/** 보드를 생성하고 지뢰를 심는 함수
- * @param {Number} row 보드의 행 갯수
- * @param {Number} col 보드의 열 갯수
- * @param {Number[]} minePositionsArr 지뢰의 위치를 갖는 배열
- * @returns {Number[][]} 지뢰의 위치를 포함한 이차원 배열 보드
- */
-const createBoard = (row: number, col: number, minePositionsArr: number[]) => {
+// NOTE: row * col 크기의 board 이차원 배열을 생성하는 함수
+const createBoard = ({ row, col }: { row: number; col: number }) => {
   const boardData: number[][] = [];
 
   for (let i = 0; i < row; i++) {
@@ -16,12 +11,6 @@ const createBoard = (row: number, col: number, minePositionsArr: number[]) => {
     }
     boardData.push(rowData);
   }
-
-  minePositionsArr.forEach((position) => {
-    const ver = Math.floor(position / col);
-    const hor = position % col;
-    boardData[ver][hor] = CELL_TYPE.MINE;
-  });
 
   return boardData;
 };
