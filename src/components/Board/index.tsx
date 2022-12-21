@@ -2,6 +2,7 @@ import React from "react";
 
 import createBoard from "../../utils/createBoard";
 import createMine from "../../utils/createMine";
+import Cell from "../Cell";
 
 export enum CELL_TYPE {
   NORMAL = -1,
@@ -25,9 +26,9 @@ const Board = () => {
     <>
       {data.map((row, index) => (
         <tr key={index}>
-          {row.map((col, index) =>
-            col === CELL_TYPE.MINE ? <td key={index}>@</td> : <td key={index}>0</td>,
-          )}
+          {row.map((col, index) => (
+            <Cell key={index} col={col} />
+          ))}
         </tr>
       ))}
     </>
