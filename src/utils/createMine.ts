@@ -10,11 +10,14 @@ const createMine = ({
   mine: number;
   currentPosition: number;
 }): number[] => {
-  const minePositionsArr = [];
+  const minePositionsArr: number[] = [];
 
   while (minePositionsArr.length < mine) {
     const minePosition = Math.floor(Math.random() * row * col);
-    if (minePosition !== currentPosition) minePositionsArr.push(minePosition);
+    if (!minePositionsArr.includes(minePosition)) {
+      // NOTE: 클릭한 위치는 제외하고 나머지 위치에서만 지뢰가 생성된다
+      if (minePosition !== currentPosition) minePositionsArr.push(minePosition);
+    }
   }
 
   return minePositionsArr;
