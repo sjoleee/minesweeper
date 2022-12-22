@@ -2,14 +2,15 @@ import React from "react";
 
 import { useAppSelect } from "../../store";
 import Cell from "../Cell";
+import * as S from "./styles";
 
 const Board = () => {
   const { boardData } = useAppSelect((state) => state);
 
   return (
-    <div>
+    <S.Board>
       {boardData.map((row, rowIndex) => (
-        <div key={rowIndex}>
+        <S.Row key={rowIndex}>
           {row.map((col, colIndex) => (
             <Cell
               key={rowIndex * row.length + colIndex}
@@ -18,9 +19,9 @@ const Board = () => {
               colIndex={colIndex}
             />
           ))}
-        </div>
+        </S.Row>
       ))}
-    </div>
+    </S.Board>
   );
 };
 export default Board;

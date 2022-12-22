@@ -140,6 +140,7 @@ const Cell = ({ col, rowIndex, colIndex }: { col: number; rowIndex: number; colI
       onClick={() => {
         onLeftClick(rowIndex * COL + colIndex);
       }}
+      isOpen={col >= 0}
     >
       {getText(col)}
     </S.Button>
