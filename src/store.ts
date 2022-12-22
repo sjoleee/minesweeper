@@ -3,8 +3,6 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 import { CELL_TYPE, COL, GAME_STATUS, ROW } from "./constants";
 import createBoard from "./utils/createBoard";
-import createMine from "./utils/createMine";
-import plantMine from "./utils/plantMine";
 
 const initialState = {
   boardData: createBoard({ row: ROW, col: COL }),
@@ -22,11 +20,11 @@ const mineSlice = createSlice({
     },
 
     open: (state, action) => {
-      const { row, col } = action.payload;
+      const { row, col, mineCount } = action.payload;
       const targetCell = state.boardData[row][col];
 
       if (targetCell === CELL_TYPE.NORMAL || targetCell === CELL_TYPE.QUESTION) {
-        state.boardData[row][col] = CELL_TYPE.OPENED;
+        state.boardData[row][col] = mineCount;
       }
       if (targetCell === CELL_TYPE.MINE || targetCell === CELL_TYPE.QUESTION_MINE) {
         state.boardData[row][col] = CELL_TYPE.CLICKED_MINE;
