@@ -1,7 +1,7 @@
 import React from "react";
 
 import { CELL_TYPE, COL, GAME_STATUS, MINE, ROW } from "../../constants";
-import { open, start, useAppDispatch, useAppSelect } from "../../store";
+import { open, rightClick, start, useAppDispatch, useAppSelect } from "../../store";
 import countMine from "../../utils/countMine";
 import createMine from "../../utils/createMine";
 import plantMine from "../../utils/plantMine";
@@ -100,7 +100,7 @@ const Cell = ({ col, rowIndex, colIndex }: { col: number; rowIndex: number; colI
     dispatch(open({ row, col, mineCount: count }));
   };
 
-  // NOTE: 좌클릭시 호출할 함수
+  // NOTE: 마우스 좌클릭시 호출할 함수
   const onLeftClick = (currentPosition: number) => {
     // NOTE: 처음 클릭하는 경우라면 보드에 지뢰를 생성하며 시작한다
     if (status === GAME_STATUS.READY) {
@@ -117,8 +117,8 @@ const Cell = ({ col, rowIndex, colIndex }: { col: number; rowIndex: number; colI
         minePositionsArr,
         boardData,
       });
-
       dispatch(start({ boardData: startingBoard }));
+
       // NOTE: 첫 클릭에서는 startingBoard를 사용하여 지뢰 갯수를 센다.
       checkAround({ row: rowIndex, col: colIndex, boardData: startingBoard });
     } else {
@@ -135,10 +135,21 @@ const Cell = ({ col, rowIndex, colIndex }: { col: number; rowIndex: number; colI
       }
     }
   };
+
+  // NOTE: 마우스 우클릭시 호출할 함수
+  const onRightClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    // NOTE: rightClick에서 분기처리하여 cell 타입을 변경해줌
+    dispatch(rightClick({ rowIndex, colIndex }));
+  };
+
   return (
     <S.Button
       onClick={() => {
         onLeftClick(rowIndex * COL + colIndex);
+      }}
+      onContextMenu={(e) => {
+        onRightClick(e);
       }}
       isOpen={col >= 0}
     >
