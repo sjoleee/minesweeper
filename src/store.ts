@@ -40,6 +40,8 @@ const mineSlice = createSlice({
       if (targetCell === CELL_TYPE.NORMAL || targetCell === CELL_TYPE.QUESTION) {
         state.boardData[row][col] = mineCount;
         state.openedCount++;
+        if (state.size.mineCount === state.size.rowCount * state.size.colCount - state.openedCount)
+          state.status = GAME_STATUS.WIN;
       }
       if (targetCell === CELL_TYPE.MINE || targetCell === CELL_TYPE.QUESTION_MINE) {
         state.boardData[row][col] = CELL_TYPE.CLICKED_MINE;
