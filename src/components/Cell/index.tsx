@@ -1,15 +1,24 @@
 import React from "react";
 
-import { CELL_TYPE, COL, GAME_STATUS, MINE, ROW } from "../../constants";
+import { CELL_TYPE, GAME_STATUS } from "../../constants";
 import { open, rightClick, start, useAppDispatch, useAppSelect } from "../../store";
 import countMine from "../../utils/countMine";
 import createMine from "../../utils/createMine";
 import plantMine from "../../utils/plantMine";
 import * as S from "./styles";
 
-const Cell = ({ col, rowIndex, colIndex }: { col: number; rowIndex: number; colIndex: number }) => {
+const Cell = ({
+  cellType,
+  rowIndex,
+  colIndex,
+}: {
+  cellType: number;
+  rowIndex: number;
+  colIndex: number;
+}) => {
   const { status } = useAppSelect((state) => state);
   const { boardData } = useAppSelect((state) => state);
+  const { rowCount, colCount, mineCount } = useAppSelect((state) => state.size);
   const dispatch = useAppDispatch();
 
   // NOTE: cell에 들어갈 텍스트를 반환하는 함수
@@ -18,12 +27,12 @@ const Cell = ({ col, rowIndex, colIndex }: { col: number; rowIndex: number; colI
       case CELL_TYPE.NORMAL:
         return "";
       case CELL_TYPE.MINE:
-        return "X";
+        return "";
       case CELL_TYPE.CLICKED_MINE:
-        return "펑";
+        return "💣";
       case CELL_TYPE.FLAG_MINE:
       case CELL_TYPE.FLAG:
-        return "🇰🇷";
+        return "🚩";
       case CELL_TYPE.QUESTION_MINE:
       case CELL_TYPE.QUESTION:
         return "?";
@@ -105,15 +114,15 @@ const Cell = ({ col, rowIndex, colIndex }: { col: number; rowIndex: number; colI
     // NOTE: 처음 클릭하는 경우라면 보드에 지뢰를 생성하며 시작한다
     if (status === GAME_STATUS.READY) {
       const minePositionsArr = createMine({
-        row: ROW,
-        col: COL,
-        mine: MINE,
+        row: rowCount,
+        col: colCount,
+        mine: mineCount,
         currentPosition,
       });
 
       // NOTE: setter가 비동기로 동작하므로 별도의 startingBoard를 생성하여 로직에 활용한다.
       const startingBoard = plantMine({
-        col: COL,
+        col: colCount,
         minePositionsArr,
         boardData,
       });
@@ -125,12 +134,12 @@ const Cell = ({ col, rowIndex, colIndex }: { col: number; rowIndex: number; colI
       // NOTE: 첫 클릭이 아닐경우
 
       // NOTE: 클릭한 cell이 지뢰가 아닐경우
-      if (col === CELL_TYPE.NORMAL) {
+      if (cellType === CELL_TYPE.NORMAL) {
         checkAround({ row: rowIndex, col: colIndex, boardData });
       }
 
       // NOTE: 클릭한 cell이 지뢰일 경우
-      if (col === CELL_TYPE.MINE) {
+      if (cellType === CELL_TYPE.MINE) {
         dispatch(open({ row: rowIndex, col: colIndex }));
       }
     }
@@ -146,14 +155,16 @@ const Cell = ({ col, rowIndex, colIndex }: { col: number; rowIndex: number; colI
   return (
     <S.Button
       onClick={() => {
-        onLeftClick(rowIndex * COL + colIndex);
+        onLeftClick(rowIndex * colCount + colIndex);
       }}
       onContextMenu={(e) => {
         onRightClick(e);
       }}
-      isOpen={col >= 0}
+      isOpen={cellType >= CELL_TYPE.OPENED}
+      isBomb={cellType === CELL_TYPE.CLICKED_MINE}
+      disabled={status === GAME_STATUS.LOSE || status === GAME_STATUS.WIN}
     >
-      {getText(col)}
+      {getText(cellType)}
     </S.Button>
   );
 };

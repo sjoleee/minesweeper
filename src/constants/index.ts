@@ -15,7 +15,3 @@ export enum GAME_STATUS {
   WIN = "WIN",
   LOSE = "LOSE",
 }
-
-export const ROW = 10;
-export const COL = 10;
-export const MINE = 10;
