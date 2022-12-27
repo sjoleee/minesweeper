@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { resize, useAppDispatch } from "../../store";
+import { resize, useAppDispatch, useAppSelect } from "../../store";
 import * as S from "./styles";
 
 const Control = () => {
@@ -9,12 +9,22 @@ const Control = () => {
   const [customMine, setCustomMine] = useState<number>(0);
   const dispatch = useAppDispatch();
 
+  const { rowCount, colCount, mineCount } = useAppSelect((state) => state.size);
+
   useEffect(() => {
     dispatch(resize({ rowCount: 8, colCount: 8, mineCount: 10 }));
   }, []);
 
   return (
     <>
+      <button
+        type="button"
+        onClick={() => {
+          dispatch(resize({ rowCount, colCount, mineCount }));
+        }}
+      >
+        Reset
+      </button>
       <button
         type="button"
         onClick={() => {
