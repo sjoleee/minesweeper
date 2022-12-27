@@ -14,7 +14,7 @@ const Board = () => {
           {row.map((col, colIndex) => (
             <Cell
               key={rowIndex * row.length + colIndex}
-              col={col}
+              cellType={col}
               rowIndex={rowIndex}
               colIndex={colIndex}
             />

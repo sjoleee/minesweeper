@@ -1,19 +1,31 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
-import { CELL_TYPE, COL, GAME_STATUS, ROW } from "./constants";
+import { CELL_TYPE, GAME_STATUS } from "./constants";
 import createBoard from "./utils/createBoard";
 
 const initialState = {
-  boardData: createBoard({ row: ROW, col: COL }),
+  boardData: [] as number[][],
+  size: { rowCount: 0, colCount: 0, mineCount: 0 },
   timer: 0,
   status: GAME_STATUS.READY,
+  openedCount: 0,
 };
 
 const mineSlice = createSlice({
   name: "mineReducer",
   initialState,
   reducers: {
+    resize: (state, action) => {
+      const { rowCount, colCount, mineCount } = action.payload;
+      state.size.rowCount = rowCount;
+      state.size.colCount = colCount;
+      state.size.mineCount = mineCount;
+      state.boardData = createBoard({ row: rowCount, col: colCount });
+      state.status = GAME_STATUS.READY;
+      state.openedCount = 0;
+    },
+
     // NOTE: 게임을 시작할 때(처음 cell을 클릭할 때) 사용할 리듀서
     start: (state, action) => {
       state.boardData = action.payload.boardData;
@@ -27,6 +39,9 @@ const mineSlice = createSlice({
 
       if (targetCell === CELL_TYPE.NORMAL || targetCell === CELL_TYPE.QUESTION) {
         state.boardData[row][col] = mineCount;
+        state.openedCount++;
+        if (state.size.mineCount === state.size.rowCount * state.size.colCount - state.openedCount)
+          state.status = GAME_STATUS.WIN;
       }
       if (targetCell === CELL_TYPE.MINE || targetCell === CELL_TYPE.QUESTION_MINE) {
         state.boardData[row][col] = CELL_TYPE.CLICKED_MINE;
@@ -72,7 +87,7 @@ const mineSlice = createSlice({
 });
 
 const mineStore = configureStore({ reducer: mineSlice.reducer });
-export const { start, open, rightClick } = mineSlice.actions;
+export const { resize, start, open, rightClick } = mineSlice.actions;
 
 type RootState = ReturnType<typeof mineStore.getState>;
 type AppDispatch = typeof mineStore.dispatch;

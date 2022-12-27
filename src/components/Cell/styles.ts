@@ -1,9 +1,8 @@
 import styled from "styled-components";
 
-export const Button = styled.button<{ isOpen: boolean }>`
-  font-size: 10px;
+export const Button = styled.button<{ isOpen: boolean; isBomb: boolean }>`
+  font-size: 12px;
   width: 30px;
   height: 30px;
-  border: 1px solid black;
-  background-color: ${({ isOpen }) => (isOpen ? "white" : "gray")};
+  background-color: ${({ isOpen, isBomb }) => (isOpen ? "white" : isBomb ? "red" : "gray")};
 `;
