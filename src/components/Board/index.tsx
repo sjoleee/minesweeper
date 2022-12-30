@@ -8,20 +8,24 @@ const Board = () => {
   const { boardData } = useAppSelect((state) => state);
 
   return (
-    <S.Board>
-      {boardData.map((row, rowIndex) => (
-        <S.Row key={rowIndex}>
-          {row.map((col, colIndex) => (
-            <Cell
-              key={rowIndex * row.length + colIndex}
-              cellType={col}
-              rowIndex={rowIndex}
-              colIndex={colIndex}
-            />
-          ))}
-        </S.Row>
-      ))}
-    </S.Board>
+    <S.Container>
+      <S.Subtitle>MINESWEEPER</S.Subtitle>
+      <S.Title>지뢰찾기</S.Title>
+      <S.Board>
+        {boardData.map((row, rowIndex) => (
+          <S.Row key={rowIndex}>
+            {row.map((col, colIndex) => (
+              <Cell
+                key={rowIndex * row.length + colIndex}
+                cellType={col}
+                rowIndex={rowIndex}
+                colIndex={colIndex}
+              />
+            ))}
+          </S.Row>
+        ))}
+      </S.Board>
+    </S.Container>
   );
 };
 export default Board;
